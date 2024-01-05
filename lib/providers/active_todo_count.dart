@@ -36,6 +36,7 @@ class ActiveTodoCount with ChangeNotifier {
         .where((Todo todo) => !todo.completed)
         .toList()
         .length;
+
     _state = _state.copyWith(activeTodoCount: newActiveTodoCount);
     notifyListeners();
   }
