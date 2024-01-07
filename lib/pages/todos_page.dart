@@ -123,7 +123,8 @@ class SearchAndFilterTodo extends StatelessWidget {
             filterButton(context, Filter.active),
             filterButton(context, Filter.completed),
           ],
-        )
+        ),
+        ShowTodos(),
       ],
     );
   }
@@ -151,5 +152,49 @@ class SearchAndFilterTodo extends StatelessWidget {
     final currentFilter = context.watch<TodoFilter>().state.filter;
 
     return currentFilter == filter ? Colors.blue : Colors.grey;
+  }
+}
+
+class ShowTodos extends StatelessWidget {
+  const ShowTodos({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final todos = context.watch<FilteredTodos>().state.filteredTodos;
+
+    Widget showBackground(int direction) {
+      return Container(
+        margin: const EdgeInsets.all(4),
+        padding: const EdgeInsets.symmetric(horizontal: 10),
+        color: Colors.red,
+        alignment:
+            direction == 0 ? Alignment.centerLeft : Alignment.centerRight,
+        child: Icon(
+          Icons.delete,
+          size: 30,
+          color: Colors.white,
+        ),
+      );
+    }
+
+    return ListView.separated(
+      primary: false,
+      shrinkWrap: true,
+      itemCount: todos.length,
+      separatorBuilder: (BuildContext context, int index) {
+        return Divider(color: Colors.grey);
+      },
+      itemBuilder: (BuildContext context, int index) {
+        return Dismissible(
+          key: ValueKey(todos[index].id),
+          background: showBackground(0),
+          secondaryBackground: showBackground(1),
+          child: Text(
+            todos[index].desc,
+            style: TextStyle(fontSize: 20),
+          ),
+        );
+      },
+    );
   }
 }
